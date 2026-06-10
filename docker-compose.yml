@@ -1,0 +1,10 @@
+services:
+  laravel:
+    build: .
+    container_name: inventori-app
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - .:/app
