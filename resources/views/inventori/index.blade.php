@@ -11,12 +11,19 @@
 </head>
 <body style="background-color:#fdf7f7;">
 
-<nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(90deg, #e8aeb7, #d8b4a0);">
-    <div class="container">
-        <span class="navbar-brand fw-bold">
-         💄 V-Beauty Inventory
-        </span>
-    </div>
+<nav class="navbar navbar-expand-lg navbar-dark"
+     style="background: linear-gradient(90deg, #e8aeb7, #d8b4a0);">
+
+```
+<div class="container">
+
+    <span class="navbar-brand fw-bold">
+        💄 V-Beauty Inventory
+    </span>
+
+</div>
+```
+
 </nav>
 
 <div class="container mt-4">
@@ -25,24 +32,38 @@
 <div class="row mb-4">
 
     <div class="col-md-4">
+
         <div class="card text-white shadow border-0"
              style="background: linear-gradient(135deg, #f7b2bd, #fcd5ce);">
+
             <div class="card-body text-center">
+
                 <h5>Total Produk</h5>
+
                 <h2>{{ $barang->count() }}</h2>
+
             </div>
+
         </div>
+
     </div>
 
     <div class="col-md-8">
+
         <div class="card shadow border-0">
+
             <div class="card-body">
+
                 <h5>Beauty Inventory Dashboard</h5>
+
                 <p class="mb-0">
                     Kelola stok produk kosmetik dengan mudah dan efisien.
                 </p>
+
             </div>
+
         </div>
+
     </div>
 
 </div>
@@ -60,11 +81,20 @@
 
         <div class="d-flex justify-content-between mb-3">
 
-            <a href="/create" class="btn btn-success">
-                + Tambah Produk
-            </a>
+            <div>
+
+                <a href="/create" class="btn btn-success">
+                    + Tambah Produk
+                </a>
+
+                <a href="/barang-keluar" class="btn btn-danger ms-2">
+                    📦 Barang Keluar
+                </a>
+
+            </div>
 
             <form action="/" method="GET" class="d-flex">
+
                 <input
                     type="text"
                     name="cari"
@@ -76,6 +106,7 @@
                 <button type="submit" class="btn btn-primary">
                     Cari
                 </button>
+
             </form>
 
         </div>
@@ -83,6 +114,7 @@
         <table class="table table-hover align-middle">
 
             <thead class="table-light">
+
                 <tr>
                     <th>ID</th>
                     <th>Nama Produk</th>
@@ -92,117 +124,92 @@
                     <th>Tanggal</th>
                     <th>Aksi</th>
                 </tr>
+
             </thead>
 
             <tbody>
 
             @forelse($barang as $item)
 
-            <tr>
+                <tr>
 
-                <td>{{ $item->id }}</td>
+                    <td>{{ $loop->iteration }}</td>
+                    
+                    <td>{{ $item->nama_barang }}</td>
 
-                <td>{{ $item->nama_barang }}</td>
+                    <td>{{ $item->no_barang }}</td>
 
-                <td>{{ $item->no_barang }}</td>
+                    <td>
 
-                <td>
+                        @if($item->jumlah_barang <= 5)
 
-                    @if($item->jumlah_barang <= 5)
+                            <span class="badge bg-danger">
+                                {{ $item->jumlah_barang }}
+                            </span>
 
-                        <span class="badge bg-danger">
-                            {{ $item->jumlah_barang }}
-                        </span>
+                        @elseif($item->jumlah_barang <= 10)
 
-                    @elseif($item->jumlah_barang <= 10)
+                            <span class="badge bg-warning text-dark">
+                                {{ $item->jumlah_barang }}
+                            </span>
 
-                        <span class="badge bg-warning text-dark">
-                            {{ $item->jumlah_barang }}
-                        </span>
+                        @else
 
-                    @else
+                            <span class="badge bg-success">
+                                {{ $item->jumlah_barang }}
+                            </span>
 
-                        <span class="badge bg-success">
-                            {{ $item->jumlah_barang }}
-                        </span>
+                        @endif
 
-                    @endif
+                    </td>
 
-                </td>
-
-                <td>
-
-                    @if($item->jenis_barang == 'Lipstick')
-
-                        <span class="badge bg-danger">
-                            Lipstick
-                        </span>
-
-                    @elseif($item->jenis_barang == 'Foundation')
-
-                        <span class="badge bg-primary">
-                            Foundation
-                        </span>
-
-                    @elseif($item->jenis_barang == 'Mascara')
-
-                        <span class="badge bg-dark">
-                            Mascara
-                        </span>
-
-                    @elseif($item->jenis_barang == 'Blush')
-
-                        <span class="badge bg-warning text-dark">
-                            Blush
-                        </span>
-
-                    @else
+                    <td>
 
                         <span class="badge bg-secondary">
                             {{ $item->jenis_barang }}
                         </span>
 
-                    @endif
+                    </td>
 
-                </td>
+                    <td>{{ $item->tanggal_masuk_keluar }}</td>
 
-                <td>{{ $item->tanggal_masuk_keluar }}</td>
+                    <td>
 
-                <td>
+                        <a href="/edit/{{ $item->id }}"
+                           class="btn btn-warning btn-sm">
+                            Edit
+                        </a>
 
-                    <a href="/edit/{{ $item->id }}"
-                       class="btn btn-warning btn-sm">
-                        Edit
-                    </a>
+                        <form action="/delete/{{ $item->id }}"
+                              method="POST"
+                              class="d-inline">
 
-                    <form action="/delete/{{ $item->id }}"
-                          method="POST"
-                          class="d-inline">
+                            @csrf
+                            @method('DELETE')
 
-                        @csrf
-                        @method('DELETE')
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Yakin ingin menghapus produk ini?')">
 
-                        <button type="submit"
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('Yakin ingin menghapus produk ini?')">
+                                Hapus
 
-                            Hapus
+                            </button>
 
-                        </button>
+                        </form>
 
-                    </form>
+                    </td>
 
-                </td>
-
-            </tr>
+                </tr>
 
             @empty
 
-            <tr>
-                <td colspan="7" class="text-center">
-                    Produk tidak ditemukan
-                </td>
-            </tr>
+                <tr>
+
+                    <td colspan="7" class="text-center">
+                        Produk tidak ditemukan
+                    </td>
+
+                </tr>
 
             @endforelse
 
